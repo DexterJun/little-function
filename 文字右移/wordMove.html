@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字移动</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #box{
+            width: 800px;
+            height: 300px;
+            padding: 10px;
+            border: 5px solid #ccc;
+            margin: 10px auto;
+        }
+        #text{
+            width: 300px;
+            height: 100%;
+            background-color: #cc6633;
+            /* dashed定义虚线，在大多数浏览器中呈现为实线 */
+            border-color: 1px dashed #cc6600;
+            float: left;
+            font-size: 16px;
+            line-height: 30px;
+            color: #ffffff;
+            outline: none;
+        }
+        #mid{
+            width: 120;
+            float: left;
+            margin: 0 35px;
+            text-align: center;
+        }
+        #btn{
+            width: 100px;
+            height: 30px;
+            background-color: #ff6600;
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            line-height: 30px;
+            /* cursor用来指定鼠标移入的手型 */
+            cursor: pointer;
+            outline: none;
+        }
+        strong{
+            margin-top: 10px;
+            display: block;
+        }
+        #mid ul{
+            list-style: none;
+            margin-top: 30px;
+            margin-left: 15px;
+            display: none;
+        }
+        #mid ul li{
+            width: 12px;
+            height: 12px;
+            background-color: #ffcc66;
+            float: left;
+            margin-right: 5px;
+        }
+        #content{
+            width: 300px;
+            height: 100%;
+            line-height: 30px;
+            font-size: 16px;
+            text-align: left;
+            background-color: #ffcc66;
+            color: #333333;
+            float: right;
+            border: 1px dashed black;
+            overflow-y: auto;
+        }
+    </style>
+    <script>
+        window.onload=function(){
+            var strong=document.getElementsByTagName("strong")[0];
+            var ul=document.getElementsByTagName("ul")[0];
+            var li=document.getElementsByTagName("li");
+            var text=document.getElementById("text");
+            var btn=document.getElementById("btn");
+            var content=document.getElementById("content");
+            /* 为按钮绑定单击响应函数 */
+            btn.onclick=function(){
+                /* 如果左侧区域为空时提醒用户输入内容 */
+                if(text.value==""){
+                    alert("请输入内容");
+                    return;
+                }
+                content.innerHTML="";//将右侧区域清空
+                this.style.background="#ccc";//修改按钮颜色
+                ul.style.display="block";//显示进度条
+                /* 设置进度条动画 */
+                var num=0;
+                var roll=setInterval(function(){
+                    for(var i=0;i<li.length;i++){//将每一个小方格背景颜色都去除
+                        li[i].style.background="";
+                    }
+                    li[num].style.background="#f30";//重新为每一个小方格设置颜色
+                    num++;
+                    if(num==li.length){//一轮结束后从头开始
+                        num=0;
+                    }
+                    console.log(1);
+                },50);
+                var sum=text.value.length;//用sum记录输入完毕后左边区域的字符个数
+                var move=setInterval(function(){
+                    /* 记录已经转移到右边的字符个数的动态变化 */
+                    strong.innerHTML=content.innerHTML.length+"/"+sum;
+                    /* 当左侧区域为空时 */
+                    if(text.value==""){
+                        clearInterval(move);
+                        clearInterval(roll);//停止两个定时调用
+                        ul.style.display="none";//使进度条消失
+                        btn.style.background="";//取消按钮背景颜色
+                        return;
+                    }
+                    var arr=text.value.split("");//使用split()将左侧区域内容转换为数组类型
+                    content.innerHTML+=arr.shift();//将转换过来的数组的第一项删除并赋值给左侧区域
+                    text.value=arr.join("");//再将剩余的数组转换为字符串给左侧区域
+                },50);
+            };
+        };
+    </script>
+</head>
+<body>
+    <!-- 外部容器 -->
+    <div id="box">
+        <!-- 左侧内容输入框 -->
+        <!-- <textarea> 标签定义多行的文本输入控件 -->
+        <textarea id="text"></textarea>
+        <!-- 中间区域 -->
+        <div id="mid">
+            <button id="btn" value="文字右移">文字右移</button>
+            <strong>0/0</strong>
+            <ul>
+                <li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+            </ul>
+        </div>
+        <!-- 右侧输出区域 -->
+        <div id="content"></div>
+    </div>
+</body>
+</html>

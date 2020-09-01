@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS实现生成随机验证码并验证功能</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper{
+            width: 330px;
+            margin: 20px auto;
+        }
+        #text{
+            height: 30px;
+            /* box-sizing用来规定元素现有的宽度高度是否包含内边距和边框 */
+            box-sizing: border-box;
+            vertical-align: middle;
+            /* text-indent 属性规定文本块中首行文本的缩进 */
+            text-indent: 1em;
+        }
+        #code{
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+            line-height: 30px;
+            background-color: #aaaaaa;
+            text-align: center;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 7px;
+            padding-left: 7px;
+            vertical-align: middle;
+            /* 设置粗体 */
+            font-weight: bold;
+        }
+        #btn{
+            width: 60px;
+            height: 30px;
+            /* 取消点击后会默认加粗的边框 */
+            outline: none;
+            border: #153021;
+            background: #499990;
+            color: #fff;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        window.onload=function(){
+            var code=document.getElementById("code");
+            var btn=document.getElementById("btn");
+            var verify="";//暂存验证码
+            creatCode();//调用函数使得在打开页面时生成验证码区域已经有验证码存在
+            code.onclick=creatCode;
+            /* 定义生成验证码的函数 */
+            function creatCode(){
+                verify="";//清空暂存的验证码，使得生成验证码的区域只保留4个码
+                var codelength=4;//验证码长度为4
+                var scale=[0,1,2,3,4,5,6,7,8,9,"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+                for(var i=0;i<codelength;i++){
+                    var index=Math.floor(Math.random()*scale.length);//随机生成scale中字符下标
+                    verify+=scale[index];//将每次生成的验证码拼串
+                }
+                code.innerHTML=verify;//将的到的验证码
+            }
+            btn.onclick=function(){
+                var text = document.getElementById("text").value.toUpperCase();//将输入的所有小写字母转换为大写
+                /* 对输入的字符进行匹配验证 */
+                if(text==""){
+                    alert("请输入验证码");
+                }else if(text!=verify){
+                    alert("验证码不正确，请重新输入");
+                    text="";
+                    creatCode();//当不匹配时清空输入框并且刷新验证码
+                }else{
+                    window.open('http://www.baidu.com', '_self');
+                }
+            };
+        };
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <input type="text" id="text" placeholder="请输入验证码">
+        <a href="javascript:;" id="code"></a>
+        <button id="btn">验证</button>
+    </div>
+</body>
+</html>

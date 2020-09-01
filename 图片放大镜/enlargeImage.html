@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #normal-img{
+            width: 300px;
+            height: 370px;
+            position: relative;
+            border: 1px solid #333;
+            top: 10px;
+        }
+        #normal-img>img{
+            width: 100%;
+        }
+        #lay{
+            background-color: orange;
+            /* opacity规定元素的不透明度0.0完全透明，1.0完全不透明 */
+            opacity: 0.5;
+            position: absolute;
+            left: 0;
+            top: 0;
+            cursor: move;
+            display: none;
+        }
+        #big-img{
+            width: 300px;
+            height: 370px;
+            position: absolute;
+            left: 350px;
+            top: 10px;
+            overflow: hidden;
+            border: 1px solid #333;
+            display: none;
+        }
+        #big-img>img{
+            width: 100%;
+            display: block;
+            position: absolute;
+        }
+    </style>
+    <script>
+        window.onload=function(){
+            var normal=document.getElementById("normal-img");
+            var lay=document.getElementById("lay");
+            var big=document.getElementById("big-img");
+            var img=big.getElementsByTagName("img")[0];
+            /* 当鼠标移入照片时显示放大镜 */
+            normal.onmouseover=function(){
+                lay.style.display="block";
+                big.style.display="block";
+            };
+            /* 当鼠标移出时放大镜消失 */
+            normal.onmouseout=function(){
+                lay.style.display="none";
+                big.style.display="none";
+            };
+            /* 定义鼠标在图片上移动时要执行的操作 */
+            normal.onmousemove=function(event){
+                var scale=4;//设置图片放大的倍数
+                event=event||window.event;//兼容浏览器
+                lay.style.width=parseInt(normal.offsetWidth/scale)+"px";
+                lay.style.height=parseInt(normal.offsetHeight/scale)+"px";//设置鼠标覆盖区域的大小
+                img.style.width=normal.offsetWidth*scale+"px";
+                img.style.height=normal.offsetHeight*scale+"px";//将放大镜中的图片放大
+                var x=event.clientX-lay.offsetWidth/2-normal.offsetLeft;
+                var y=event.clientY-lay.offsetHeight/2-normal.offsetTop;//将鼠标覆盖的区域移到鼠标中点
+                /* 对边界进行判断，不让覆盖区域移出边界 */
+                if(x<0){
+                    x=0;
+                }
+                if(x>normal.offsetWidth-lay.offsetWidth){
+                    x=normal.offsetWidth-lay.offsetWidth;
+                }
+                if(y<0){
+                    y=0;
+                }
+                if(y>normal.offsetHeight-lay.offsetHeight){
+                    y=normal.offsetHeight-lay.offsetHeight;
+                }
+                lay.style.left=x+"px";
+                lay.style.top=y+"px";//鼠标在覆盖元素中点位置
+                var left=lay.offsetLeft*scale;
+                var top=lay.offsetTop*scale;
+                img.style.left=-left+"px";
+                img.style.top=-top+"px";//设置放大镜中的图片的偏移量
+            };
+        };
+    </script>
+</head>
+<body>
+    <div id="normal-img">
+        <img src="./images/a0.jpg" alt="">
+        <span id="lay"></span>
+    </div>
+    <div id="big-img">
+        <img src="./images/a0.jpg" alt="">
+    </div>
+</body> 
+</html>
